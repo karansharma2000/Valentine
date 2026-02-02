@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine’s?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  color: white;
+  text-align: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.15);
+  padding: 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  max-width: 360px;
+}
+
+h1 { font-size: 28px; margin-bottom: 8px; }
+p { font-size: 18px; margin: 8px 0; }
+
+#countdown {
+  margin: 15px 0;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+button {
+  margin: 10px;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+.yes {
+  background: #fff;
+  color: #ff4d6d;
+}
+
+.no {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  position: absolute;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h1>Hey ❤️</h1>
+  <p>Will you be my Valentine?</p>
+
+  <div id="countdown">⏳ Loading countdown…</div>
+
+  <button class="yes" onclick="yes()">Yes 💖</button>
+  <button class="no" id="noBtn">No 🙃</button>
+</div>
+
+<audio id="music" loop>
+  <source src="PASTE-MUSIC-LINK-HERE" type="audio/mpeg">
+</audio>
+
+<script>
+// Runaway No button
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", () => {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 50);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
+
+// Countdown Timer
+const countdownEl = document.getElementById("countdown");
+const valentinesDay = new Date("February 14, 2026 00:00:00").getTime();
+
+setInterval(() => {
+  const now = new Date().getTime();
+  const distance = valentinesDay - now;
+
+  if (distance < 0) {
+    countdownEl.innerHTML = "❤️ It’s Valentine’s Day ❤️";
+    return;
+  }
+
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  countdownEl.innerHTML = `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s until Valentine’s 💘`;
+}, 1000);
+
+// Yes click
+function yes() {
+  document.getElementById("music").play();
+  confetti({ particleCount: 250, spread: 120, origin: { y: 0.6 } });
+  document.body.innerHTML = `
+    <div class="card">
+      <h1>It’s a date 🥰</h1>
+      <p>February 14 is locked ❤️</p>
+      <p>See you soon 😘</p>
+    </div>`;
+}
+</script>
+</body>
+</html>

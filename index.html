@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Valentine’s 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0"></script>
+
+<style>
+html,body {
+  margin:0; padding:0;
+  height:100%;
+  overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+  background:#0b0014;
+}
+
+/* Canvas */
+#bg {
+  position:fixed;
+  inset:0;
+  z-index:0;
+}
+
+/* UI */
+.container {
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.card {
+  width:380px;
+  padding:36px;
+  border-radius:28px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(28px);
+  box-shadow:0 40px 120px rgba(0,0,0,0.4);
+  color:white;
+  text-align:center;
+  transform-style:preserve-3d;
+}
+
+h1 { font-size:32px; }
+p { font-size:18px; opacity:.95; }
+
+#countdown {
+  margin:16px 0 22px;
+  font-size:16px;
+}
+
+.buttons {
+  position:relative;
+  height:70px;
+}
+
+button {
+  position:absolute;
+  padding:14px 32px;
+  border-radius:999px;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.yes {
+  left:0;
+  background:white;
+  color:#ff3f81;
+}
+
+.no {
+  right:0;
+  background:transparent;
+  border:2px solid rgba(255,255,255,.8);
+  color:white;
+}
+
+/* Cursor hearts */
+.heart {
+  position:fixed;
+  pointer-events:none;
+  animation:float 1s ease forwards;
+}
+@keyframes float {
+  to { transform:translateY(-40px) scale(1.4); opacity:0; }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="container">
+  <div class="card" id="card">
+    <h1>Hey ❤️</h1>
+    <p>Will you be my Valentine?</p>
+    <div id="countdown"></div>
+    <div class="buttons">
+      <button class="yes" id="yes">Yes 💖</button>
+      <button class="no" id="no">No 🙃</button>
+    </div>
+  </div>
+</div>
+
+<!-- SoundCloud (official, safe) -->
+<iframe
+  width="0"
+  height="0"
+  style="display:none"
+  src="https://w.soundcloud.com/player/?url=https://on.soundcloud.com/WQUcmetMLylZnxs7qw&auto_play=false">
+</iframe>
+
+<script>
+// ===== WEBGL BACKGROUND (FIXED & SAFE) =====
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+function resize() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+resize(); window.onresize = resize;
+
+let t = 0, mx=0, my=0;
+
+// fluid light background
+function draw() {
+  t += 0.01;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  const g = ctx.createRadialGradient(
+    mx, my, 50,
+    canvas.width/2, canvas.height/2, canvas.width
+  );
+  g.addColorStop(0, `hsla(${300+Math.sin(t)*40},80%,65%,0.9)`);
+  g.addColorStop(1, "#0b0014");
+
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+// Mouse / touch
+window.addEventListener("mousemove", e=>{
+  mx = e.clientX; my = e.clientY;
+  const h = document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=e.clientX+"px";
+  h.style.top=e.clientY+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),900);
+});
+
+// Gyro (mobile)
+window.addEventListener("deviceorientation", e=>{
+  if(e.gamma!=null){
+    mx = innerWidth/2 + e.gamma*8;
+    my = innerHeight/2 + e.beta*8;
+  }
+});
+
+// Card tilt
+const card = document.getElementById("card");
+window.addEventListener("mousemove", e=>{
+  card.style.transform = `
+    rotateY(${(innerWidth/2-e.clientX)/25}deg)
+    rotateX(${(innerHeight/2-e.clientY)/25}deg)
+  `;
+});
+
+// Runaway No (smooth physics)
+const no = document.getElementById("no");
+window.addEventListener("mousemove", e=>{
+  const r=no.getBoundingClientRect();
+  const dx=e.clientX-(r.left+r.width/2);
+  const dy=e.clientY-(r.top+r.height/2);
+  if(Math.hypot(dx,dy)<120){
+    no.style.transform=`translate(${-dx*0.8}px,${-dy*0.6}px)`;
+  }
+});
+
+// Countdown
+const cd=document.getElementById("countdown");
+const V=new Date("Feb 14, 2026").getTime();
+setInterval(()=>{
+  const d=V-Date.now();
+  cd.innerHTML=d>0
+    ?`⏳ ${Math.floor(d/86400000)}d ${Math.floor(d%86400000/3600000)}h ${Math.floor(d%3600000/60000)}m`
+    :"❤️ Today ❤️";
+},1000);
+
+// YES
+document.getElementById("yes").onclick=()=>{
+  confetti({particleCount:400,spread:180});
+  setTimeout(()=>{
+    document.body.innerHTML=
+      `<div class="container"><div class="card"><h1>It’s a date 🥰</h1><p>February 14 is ours ❤️</p></div></div>`;
+  },900);
+};
+</script>
+
+</body>
+</html>

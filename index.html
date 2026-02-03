@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
 html,body{
   margin:0;
   padding:0;
@@ -15,19 +17,21 @@ html,body{
   background:linear-gradient(180deg,#ffb3d9,#ffd6e8);
 }
 
-/* ===== FLOATING HEARTS ===== */
+/* FLOATING HEARTS */
 .heart-bg{
   position:fixed;
   bottom:-40px;
+  font-size:20px;
   opacity:.6;
   animation:floatUp linear infinite;
   pointer-events:none;
 }
 @keyframes floatUp{
-  to{ transform:translateY(-120vh); opacity:0; }
+  from{ transform:translateY(0) scale(.8); }
+  to{ transform:translateY(-120vh) scale(1.4); opacity:0; }
 }
 
-/* ===== CURSOR HEART TRAIL ===== */
+/* CURSOR HEART TRAIL */
 .cursor-heart{
   position:fixed;
   pointer-events:none;
@@ -37,42 +41,47 @@ html,body{
   to{ transform:translateY(-40px) scale(1.3); opacity:0; }
 }
 
-/* ===== NOTIFICATION ===== */
-.notification{
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:white;
-  padding:14px 20px;
-  border-radius:999px;
-  box-shadow:0 12px 30px rgba(0,0,0,.2);
-  font-weight:600;
-  cursor:pointer;
-  z-index:20;
-}
-
-/* ===== CARD ===== */
+/* CENTER CARD */
 .container{
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:all 1s ease;
+  transition:transform 1s ease, opacity 1s ease;
 }
+
 .card{
-  background:rgba(255,255,255,.9);
+  background:rgba(255,255,255,0.92);
   padding:56px;
   width:480px;
   border-radius:40px;
   text-align:center;
   box-shadow:0 50px 140px rgba(0,0,0,.25);
+  animation:pop 1.2s ease;
 }
 
-h1{ color:#ff3f81; }
+@keyframes pop{
+  0%{ transform:scale(.8); opacity:0; }
+  100%{ transform:scale(1); opacity:1; }
+}
+
+h1{
+  font-size:34px;
+  margin-bottom:14px;
+  color:#ff3f81;
+}
+
 p{ font-size:20px; }
 
-/* ===== BUTTONS ===== */
-.buttons{ position:relative; height:90px; margin-top:20px; }
+/* COUNTDOWN */
+#countdown{
+  margin:18px 0 30px;
+  font-size:16px;
+}
+
+/* BUTTONS */
+.buttons{ position:relative; height:90px; }
+
 button{
   padding:18px 44px;
   font-size:18px;
@@ -81,6 +90,7 @@ button{
   cursor:pointer;
   position:absolute;
 }
+
 #yes{
   left:0;
   background:#ff3f81;
@@ -95,59 +105,61 @@ button{
   color:#ff3f81;
 }
 
-/* ===== ENVELOPE ===== */
-.envelope{
-  width:240px;
-  height:150px;
+/* LETTER NOTIFICATION */
+#notif{
+  position:absolute;
+  top:-14px;
+  right:-14px;
   background:#ff3f81;
-  border-radius:14px;
-  margin:30px auto;
-  position:relative;
-  cursor:pointer;
-}
-.envelope::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:#ff6fa5;
-  clip-path:polygon(0 0,50% 60%,100% 0,100% 100%,0 100%);
+  color:white;
+  font-size:14px;
+  padding:6px 12px;
+  border-radius:999px;
 }
 
-/* ===== LETTER ===== */
+/* LETTER */
 .letter{
-  position:absolute;
-  top:10px;
-  left:10px;
-  right:10px;
-  height:280px;
-  background:#fffdf7;
-  border-radius:12px;
-  padding:26px;
-  font-family:"Comic Sans MS","Bradley Hand",cursive;
-  transform:translateY(90px);
-  opacity:0;
-  transition:all 1s ease;
-}
-.envelope.open .letter{
-  transform:translateY(-210px);
-  opacity:1;
+  cursor:pointer;
+  font-size:22px;
+  margin-top:10px;
 }
 
-/* ===== SIGNATURE ===== */
-.signature{
-  margin-top:20px;
-  font-family:"Brush Script MT","Lucida Handwriting",cursive;
-  font-size:22px;
+.letter-box{
+  background:#fff;
+  padding:40px;
+  border-radius:30px;
+  box-shadow:0 40px 120px rgba(0,0,0,.25);
+  max-width:520px;
+  animation:pop 1s ease;
 }
+
+.signature{
+  margin-top:28px;
+  font-family:'Great Vibes',cursive;
+  font-size:28px;
+}
+
+/* FADE */
+.fade{
+  position:fixed;
+  inset:0;
+  background:white;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 1.2s ease;
+  z-index:10;
+}
+.fade.show{ opacity:1; }
 </style>
 </head>
 
 <body>
 
-<div class="notification" onclick="showLetter()">💌 1 New Letter</div>
+<div class="fade" id="fade"></div>
 
 <div class="container" id="container">
   <div class="card">
+    <div id="notif">1 New Letter 💌</div>
     <h1>HEYYYY HEERIKA JAIN 💖</h1>
     <p>Will you be my Valentine?</p>
     <div id="countdown"></div>
@@ -159,19 +171,20 @@ button{
 </div>
 
 <script>
-// ===== FLOATING HEARTS =====
-setInterval(()=>{
+// BACKGROUND HEARTS
+function spawnBgHeart(){
   const h=document.createElement("div");
   h.className="heart-bg";
   h.innerText="❤️";
   h.style.left=Math.random()*100+"vw";
-  h.style.fontSize=14+Math.random()*24+"px";
+  h.style.fontSize=14+Math.random()*26+"px";
   h.style.animationDuration=6+Math.random()*8+"s";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),15000);
-},220);
+}
+setInterval(spawnBgHeart,220);
 
-// ===== CURSOR HEART TRAIL =====
+// CURSOR HEART TRAIL
 document.addEventListener("mousemove",e=>{
   const h=document.createElement("div");
   h.className="cursor-heart";
@@ -182,7 +195,7 @@ document.addEventListener("mousemove",e=>{
   setTimeout(()=>h.remove(),900);
 });
 
-// ===== RUNAWAY NO =====
+// RUNAWAY NO BUTTON
 const no=document.getElementById("no");
 document.addEventListener("mousemove",e=>{
   const r=no.getBoundingClientRect();
@@ -193,63 +206,74 @@ document.addEventListener("mousemove",e=>{
   }
 });
 
-// ===== COUNTDOWN (D:H:M:S) =====
+// COUNTDOWN FULL
 const cd=document.getElementById("countdown");
 const V=new Date("Feb 14, 2026 00:00:00").getTime();
 setInterval(()=>{
   const d=V-Date.now();
+  if(d<=0){ cd.innerHTML="❤️ It’s Today ❤️"; return; }
   const days=Math.floor(d/86400000);
-  const hrs=Math.floor(d/3600000)%24;
-  const mins=Math.floor(d/60000)%60;
-  const secs=Math.floor(d/1000)%60;
+  const hrs=Math.floor((d%86400000)/3600000);
+  const mins=Math.floor((d%3600000)/60000);
+  const secs=Math.floor((d%60000)/1000);
   cd.innerHTML=`⏳ ${days}d ${hrs}h ${mins}m ${secs}s`;
 },1000);
 
-// ===== LETTER TEXT =====
+// LETTER CONTENT
 function getLetter(){
   const today=new Date();
-  const m=today.getMonth()+1;
   const d=today.getDate();
+  const m=today.getMonth()+1;
 
   const week={
-    7:"🌹 Happy Rose Day — consider this letter your rose.",
-    8:"💍 Happy Propose Day — still choosing you.",
-    9:"🍫 Happy Chocolate Day — sweet, slightly addictive.",
-    10:"🧸 Happy Teddy Day — soft hugs reserved for you.",
-    11:"🤞 Happy Promise Day — I’m not going anywhere.",
-    12:"🤗 Happy Hug Day — imagine this is a long one.",
-    13:"💋 Happy Kiss Day — this line was written too close.",
-    14:"❤️ Happy Valentine’s Day — this was always us."
+    7:"Happy Rose Day 🌹",
+    8:"Happy Propose Day 💍",
+    9:"Happy Chocolate Day 🍫",
+    10:"Happy Teddy Day 🧸",
+    11:"Happy Promise Day 🤞",
+    12:"Happy Hug Day 🤗",
+    13:"Happy Kiss Day 😘",
+    14:"Happy Valentine’s Day ❤️"
   };
 
   if(m===2 && week[d]) return week[d];
 
   const normal=[
-    "You somehow became my favorite notification.",
-    "If this page reloads, I still choose you.",
-    "I didn’t plan this. I planned us.",
-    "You’re my calm, my chaos, and my yes.",
-    "This wasn’t luck. This was intention."
+    "What kind of pie is Heerika?\nA cutie-pie. Obviously.",
+    "If Heerika were a subject in school, I’d still fail… because I’d keep staring.",
+    "What do you call someone who makes every room better?\nHeerika. That’s the word.",
+    "Is Heerika made of sunshine?\nBecause everything’s brighter for no logical reason.",
+    "Scientists say perfection doesn’t exist.\nThey haven’t met Heerika.",
+    "If smiles had a face, it would probably look like Heerika.",
+    "Breaking news: Heerika is the reason this page exists."
   ];
-  return normal[today.getDate()%normal.length];
+
+  return normal[Math.floor(Math.random()*normal.length)];
 }
 
-// ===== SHOW LETTER =====
-document.getElementById("yes").onclick=showLetter;
-function showLetter(){
-  document.getElementById("container").innerHTML=`
-    <div class="card">
-      <h2>One letter, just for you 💌</h2>
-      <div class="envelope" onclick="this.classList.add('open')">
-        <div class="letter">
-          <p>${getLetter()}</p>
-          <p style="margin-top:16px;font-size:14px">${cd.innerHTML}</p>
-          <div class="signature">— KS</div>
-        </div>
+// YES CLICK
+document.getElementById("yes").onclick=()=>{
+  document.getElementById("container").style.opacity="0";
+  setTimeout(()=>{
+    document.getElementById("fade").classList.add("show");
+  },500);
+
+  setTimeout(()=>{
+    document.body.innerHTML=
+    `<div class="container">
+      <div class="letter-box">
+        <div class="letter">💌 Click to open</div>
       </div>
-      <p style="font-size:14px">(Tap the envelope)</p>
     </div>`;
-}
+
+    document.querySelector(".letter").onclick=()=>{
+      document.querySelector(".letter-box").innerHTML=
+      `<p>${getLetter()}</p>
+       <p style="margin-top:20px">${cd.innerHTML}</p>
+       <div class="signature">– KS</div>`;
+    };
+  },1200);
+};
 </script>
 
 </body>

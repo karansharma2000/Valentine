@@ -17,7 +17,7 @@ html,body{
   background:linear-gradient(180deg,#ffb3d9,#ffd6e8);
 }
 
-/* FLOATING HEARTS */
+/* ================= HEARTS ================= */
 .heart-bg{
   position:fixed;
   bottom:-40px;
@@ -27,11 +27,9 @@ html,body{
   pointer-events:none;
 }
 @keyframes floatUp{
-  from{ transform:translateY(0) scale(.8); }
   to{ transform:translateY(-120vh) scale(1.4); opacity:0; }
 }
 
-/* CURSOR HEART TRAIL */
 .cursor-heart{
   position:fixed;
   pointer-events:none;
@@ -41,49 +39,29 @@ html,body{
   to{ transform:translateY(-40px) scale(1.3); opacity:0; }
 }
 
-/* CENTER CARD */
+/* ================= MAIN CARD ================= */
 .container{
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:transform 1s ease, opacity 1s ease;
 }
 
 .card{
-  background:rgba(255,255,255,0.92);
+  background:rgba(255,255,255,.95);
   padding:56px;
-  width:480px;
-  border-radius:40px;
+  width:520px;
+  border-radius:42px;
   text-align:center;
   box-shadow:0 50px 140px rgba(0,0,0,.25);
-  animation:pop 1.2s ease;
 }
 
-@keyframes pop{
-  0%{ transform:scale(.8); opacity:0; }
-  100%{ transform:scale(1); opacity:1; }
-}
+h1{ color:#ff3f81; }
 
-h1{
-  font-size:34px;
-  margin-bottom:14px;
-  color:#ff3f81;
-}
-
-p{ font-size:20px; }
-
-/* COUNTDOWN */
-#countdown{
-  margin:18px 0 30px;
-  font-size:16px;
-}
-
-/* BUTTONS */
 .buttons{ position:relative; height:90px; }
 
 button{
-  padding:18px 44px;
+  padding:18px 48px;
   font-size:18px;
   border-radius:999px;
   border:none;
@@ -91,101 +69,112 @@ button{
   position:absolute;
 }
 
-#yes{
-  left:0;
-  background:#ff3f81;
-  color:white;
-}
-#yes:hover{ transform:scale(1.08); }
+#yes{ left:0; background:#ff3f81; color:white; }
+#no{ right:0; background:white; border:2px solid #ff3f81; color:#ff3f81; }
 
-#no{
-  right:0;
-  background:white;
-  border:2px solid #ff3f81;
-  color:#ff3f81;
-}
-
-/* LETTER NOTIF */
+/* ================= NOTIFICATION ================= */
 #notif{
   position:absolute;
-  top:-14px;
-  right:-14px;
+  top:-18px;
+  right:-18px;
   background:#ff3f81;
   color:white;
-  font-size:14px;
-  padding:6px 12px;
+  font-size:15px;
+  padding:10px 18px;
   border-radius:999px;
+  cursor:pointer;
 }
 
-/* ENVELOPE */
+/* ================= ENVELOPE ================= */
 .envelope-wrapper{
+  width:460px;
+  height:300px;
   position:relative;
-  width:360px;
-  height:240px;
+  animation:shake 1.4s ease 1;
+}
+
+@keyframes shake{
+  0%,100%{ transform:rotate(0); }
+  20%{ transform:rotate(-2deg); }
+  40%{ transform:rotate(2deg); }
+  60%{ transform:rotate(-1deg); }
 }
 
 .envelope{
   width:100%;
   height:100%;
   background:#ff9ecb;
-  border-radius:16px;
+  border-radius:20px;
   position:relative;
-  box-shadow:0 30px 80px rgba(0,0,0,.3);
+  box-shadow:0 40px 100px rgba(0,0,0,.35);
   overflow:hidden;
 }
 
 .envelope-flap{
   position:absolute;
-  top:0;
-  width:100%;
-  height:100%;
+  inset:0;
   background:#ff7fb8;
-  clip-path:polygon(0 0,100% 0,50% 55%);
+  clip-path:polygon(0 0,100% 0,50% 58%);
   transform-origin:top;
-  animation:openFlap 1.2s forwards;
-  z-index:3;
+  transition:transform 1s ease;
+  z-index:5;
 }
 
-@keyframes openFlap{
-  to{ transform:rotateX(180deg); }
+.envelope-flap span{
+  position:absolute;
+  top:22px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:30px;
+}
+
+.envelope.open .envelope-flap{
+  transform:rotateX(180deg);
 }
 
 .paper{
   position:absolute;
-  bottom:-260px;
+  bottom:-380px;
   left:50%;
   transform:translateX(-50%);
-  width:300px;
+  width:380px;
   background:white;
-  padding:36px;
-  border-radius:18px;
-  box-shadow:0 20px 60px rgba(0,0,0,.35);
+  padding:46px;
+  border-radius:24px;
+  box-shadow:0 25px 70px rgba(0,0,0,.35);
   transition:bottom 1.2s ease;
   cursor:pointer;
   z-index:2;
 }
 
-.paper.open{
-  bottom:20px;
-}
+.paper.open{ bottom:28px; }
 
 .signature{
   margin-top:28px;
   font-family:'Great Vibes',cursive;
-  font-size:28px;
+  font-size:32px;
 }
 
-/* BIN */
+/* ================= FALLING HEARTS ================= */
+.fall-heart{
+  position:fixed;
+  font-size:18px;
+  animation:fall 2s forwards;
+}
+@keyframes fall{
+  to{ transform:translateY(120px); opacity:0; }
+}
+
+/* ================= BIN ================= */
 #bin{
   position:fixed;
-  bottom:20px;
+  bottom:18px;
   left:50%;
   transform:translateX(-50%);
-  font-size:42px;
+  font-size:48px;
   opacity:0;
-  transition:.6s;
+  transition:.4s;
 }
-
 #bin.show{ opacity:1; }
 
 #cheat{
@@ -197,7 +186,6 @@ button{
   opacity:0;
   transition:.6s;
 }
-
 #cheat.show{ opacity:1; }
 </style>
 </head>
@@ -221,7 +209,7 @@ button{
 <div id="cheat">don’t cheat 😌</div>
 
 <script>
-// HEARTS
+/* BACKGROUND HEARTS */
 setInterval(()=>{
   const h=document.createElement("div");
   h.className="heart-bg";
@@ -233,7 +221,7 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),15000);
 },220);
 
-// CURSOR
+/* CURSOR */
 document.addEventListener("mousemove",e=>{
   const h=document.createElement("div");
   h.className="cursor-heart";
@@ -244,32 +232,9 @@ document.addEventListener("mousemove",e=>{
   setTimeout(()=>h.remove(),900);
 });
 
-// RUNAWAY NO
-const no=document.getElementById("no");
-document.addEventListener("mousemove",e=>{
-  const r=no.getBoundingClientRect();
-  const dx=e.clientX-(r.left+r.width/2);
-  const dy=e.clientY-(r.top+r.height/2);
-  if(Math.hypot(dx,dy)<120){
-    no.style.transform=`translate(${-dx}px,${-dy}px)`;
-  }
-});
-
-// NO CLICK → BIN
-no.onclick=()=>{
-  const bin=document.getElementById("bin");
-  const cheat=document.getElementById("cheat");
-  bin.classList.add("show");
-  no.style.transition="1s";
-  no.style.transform="translate(-50%,300px) scale(.2)";
-  setTimeout(()=>{
-    cheat.classList.add("show");
-  },600);
-};
-
-// COUNTDOWN
+/* COUNTDOWN */
 const cd=document.getElementById("countdown");
-const V=new Date("Feb 14, 2026").getTime();
+const V=new Date("Feb 14, 2026 00:00:00").getTime();
 setInterval(()=>{
   const d=V-Date.now();
   if(d<=0){ cd.innerHTML="❤️ It’s Today ❤️"; return; }
@@ -280,40 +245,95 @@ setInterval(()=>{
   cd.innerHTML=`⏳ ${days}d ${hrs}h ${mins}m ${secs}s`;
 },1000);
 
-// LETTER TEXT
+/* LETTER TEXT */
 function getLetter(){
-  const normal=[
+  const arr=[
     "What kind of pie is Heerika?\nA cutie-pie.",
     "If Heerika were WiFi, I’d never disconnect.",
     "Heerika isn’t a crush.\nShe’s a daily requirement.",
     "Is Heerika a typo?\nBecause perfection feels accidental.",
     "If smiles had a face, it’d be Heerika."
   ];
-  return normal[Math.floor(Math.random()*normal.length)];
+  return arr[Math.floor(Math.random()*arr.length)];
 }
 
-// YES CLICK
-document.getElementById("yes").onclick=()=>{
-  document.getElementById("container").style.opacity="0";
-  setTimeout(()=>{
-    document.body.innerHTML=
-    `<div class="container">
-      <div class="envelope-wrapper">
-        <div class="envelope">
-          <div class="envelope-flap"></div>
-          <div class="paper" id="paper">
-            <p>${getLetter()}</p>
-            <p style="margin-top:20px">${cd.innerHTML}</p>
-            <div class="signature">– KS</div>
-          </div>
+/* FALLING HEARTS */
+function fallHearts(){
+  for(let i=0;i<6;i++){
+    const h=document.createElement("div");
+    h.className="fall-heart";
+    h.innerText="💖";
+    h.style.left=50+Math.random()*40-20+"%";
+    h.style.top="40%";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2000);
+  }
+}
+
+/* OPEN LETTER */
+function openLetter(){
+  document.getElementById("container").remove();
+  document.body.innerHTML+=`
+  <div class="container">
+    <div class="envelope-wrapper">
+      <div class="envelope open" id="env">
+        <div class="envelope-flap"><span>💌</span></div>
+        <div class="paper open" id="paper">
+          <p>${getLetter()}</p>
+          <p style="margin-top:20px">${cd.innerHTML}</p>
+          <div class="signature">– KS</div>
         </div>
       </div>
-    </div>`;
+    </div>
+  </div>`;
+  fallHearts();
 
-    const paper=document.getElementById("paper");
-    setTimeout(()=>paper.classList.add("open"),1400);
-    paper.onclick=()=>paper.classList.toggle("open");
-  },600);
+  const paper=document.getElementById("paper");
+  const env=document.getElementById("env");
+
+  paper.onclick=()=>{
+    const open=paper.classList.toggle("open");
+    env.classList.toggle("open",open);
+  };
+}
+
+/* YES + NOTIF */
+document.getElementById("yes").onclick=openLetter;
+document.getElementById("notif").onclick=openLetter;
+
+/* RUNAWAY NO */
+const no=document.getElementById("no");
+document.addEventListener("mousemove",e=>{
+  const r=no.getBoundingClientRect();
+  const dx=e.clientX-(r.left+r.width/2);
+  const dy=e.clientY-(r.top+r.height/2);
+  if(Math.hypot(dx,dy)<120){
+    no.style.transform=`translate(${-dx}px,${-dy}px)`;
+  }
+});
+
+/* NO → BIN */
+no.onclick=()=>{
+  const bin=document.getElementById("bin");
+  const cheat=document.getElementById("cheat");
+  bin.classList.add("show");
+
+  const r=no.getBoundingClientRect();
+  no.style.position="fixed";
+  no.style.left=r.left+"px";
+  no.style.top=r.top+"px";
+
+  setTimeout(()=>{
+    no.style.transition="1s";
+    no.style.left="50%";
+    no.style.top="92%";
+    no.style.transform="translate(-50%,0) scale(.1)";
+  },20);
+
+  setTimeout(()=>{
+    no.remove();
+    cheat.classList.add("show");
+  },1000);
 };
 </script>
 

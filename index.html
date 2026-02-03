@@ -5,9 +5,9 @@
 <title>Be My Valentine 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
+<style>
 html,body{
   margin:0;
   padding:0;
@@ -17,11 +17,10 @@ html,body{
   background:linear-gradient(180deg,#ffb3d9,#ffd6e8);
 }
 
-/* BACKGROUND HEARTS */
+/* FLOATING HEARTS */
 .heart-bg{
   position:fixed;
   bottom:-40px;
-  font-size:20px;
   opacity:.6;
   animation:floatUp linear infinite;
   pointer-events:none;
@@ -30,6 +29,7 @@ html,body{
   to{ transform:translateY(-120vh) scale(1.4); opacity:0; }
 }
 
+/* CURSOR HEARTS */
 .cursor-heart{
   position:fixed;
   pointer-events:none;
@@ -39,7 +39,7 @@ html,body{
   to{ transform:translateY(-40px) scale(1.3); opacity:0; }
 }
 
-/* CARD */
+/* CENTER CARD */
 .container{
   height:100%;
   display:flex;
@@ -48,21 +48,21 @@ html,body{
 }
 
 .card{
-  background:rgba(255,255,255,.96);
+  background:rgba(255,255,255,0.92);
   padding:56px;
-  width:520px;
-  border-radius:42px;
+  width:480px;
+  border-radius:40px;
   text-align:center;
   box-shadow:0 50px 140px rgba(0,0,0,.25);
-  position:relative;
 }
 
 h1{ color:#ff3f81; }
 
+/* BUTTONS */
 .buttons{ position:relative; height:90px; }
 
 button{
-  padding:18px 48px;
+  padding:18px 44px;
   font-size:18px;
   border-radius:999px;
   border:none;
@@ -73,42 +73,41 @@ button{
 #yes{ left:0; background:#ff3f81; color:white; }
 #no{ right:0; background:white; border:2px solid #ff3f81; color:#ff3f81; }
 
-/* NOTIFICATION (FIXED) */
+/* NOTIFICATION */
 #notif{
-  position:absolute;
-  top:18px;
-  right:18px;
+  position:fixed;
+  top:24px;
+  right:24px;
   background:#ff3f81;
   color:white;
-  font-size:15px;
-  padding:10px 18px;
-  border-radius:14px;
+  padding:14px 22px;
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.3);
+  font-size:16px;
   cursor:pointer;
-  box-shadow:0 8px 24px rgba(0,0,0,.25);
+  animation:shake 1.2s infinite;
+  z-index:50;
+}
+@keyframes shake{
+  0%,100%{ transform:translateX(0); }
+  25%{ transform:translateX(-2px); }
+  50%{ transform:translateX(2px); }
 }
 
 /* ENVELOPE */
 .envelope-wrapper{
-  width:480px;
-  height:320px;
   position:relative;
-  animation:shake 1.2s ease 1;
-}
-
-@keyframes shake{
-  0%,100%{ transform:rotate(0); }
-  20%{ transform:rotate(-2deg); }
-  40%{ transform:rotate(2deg); }
-  60%{ transform:rotate(-1deg); }
+  width:420px;
+  height:280px;
 }
 
 .envelope{
+  position:absolute;
   width:100%;
   height:100%;
   background:#ff9ecb;
-  border-radius:22px;
-  position:relative;
-  box-shadow:0 40px 100px rgba(0,0,0,.35);
+  border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.3);
   overflow:hidden;
 }
 
@@ -116,88 +115,68 @@ button{
   position:absolute;
   inset:0;
   background:#ff7fb8;
-  clip-path:polygon(0 0,100% 0,50% 58%);
-  transform-origin:top;
+  clip-path:polygon(0 0,100% 0,50% 60%);
+  transform-origin:50% 0%;
   transition:transform 1s ease;
   z-index:5;
+  display:flex;
+  justify-content:center;
 }
 
 .envelope-flap span{
-  position:absolute;
-  top:24px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:32px;
+  margin-top:20px;
+  font-size:38px;
+  animation:heartbeat 1.8s infinite;
 }
 
-.envelope.open .envelope-flap{
-  transform:rotateX(180deg);
+@keyframes heartbeat{
+  0%{ transform:scale(1); }
+  14%{ transform:scale(1.15); }
+  28%{ transform:scale(1); }
 }
 
-/* PAPER (BIGGER & SAFER) */
+/* PAPER */
 .paper{
   position:absolute;
-  bottom:-420px;
+  bottom:-320px;
   left:50%;
   transform:translateX(-50%);
-  width:min(420px,90vw);
+  width:360px;
   background:white;
-  padding:52px;
-  border-radius:26px;
-  box-shadow:0 30px 80px rgba(0,0,0,.35);
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
   transition:bottom 1.2s ease;
   cursor:pointer;
-  z-index:2;
+  z-index:3;
 }
 
-.paper.open{ bottom:32px; }
+.paper.open{ bottom:24px; }
 
 .signature{
-  margin-top:28px;
   font-family:'Great Vibes',cursive;
-  font-size:34px;
+  font-size:30px;
+  margin-top:24px;
 }
 
-/* FALLING HEARTS */
-.fall-heart{
-  position:fixed;
-  font-size:18px;
-  animation:fall 2s forwards;
-}
-@keyframes fall{
-  to{ transform:translateY(140px); opacity:0; }
-}
-
-/* BIN */
+/* GARBAGE */
 #bin{
   position:fixed;
-  bottom:18px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:48px;
-  opacity:0;
-  transition:.4s;
+  bottom:40px;
+  right:40px;
+  font-size:64px;
+  display:none;
 }
-#bin.show{ opacity:1; }
-
-#cheat{
-  position:fixed;
-  bottom:70px;
-  width:100%;
-  text-align:center;
-  font-size:16px;
-  opacity:0;
-  transition:.6s;
-}
-#cheat.show{ opacity:1; }
 </style>
 </head>
 
 <body>
 
+<div id="notif">💌 1 New Letter</div>
+<div id="bin">🗑️</div>
+
 <div class="container" id="container">
   <div class="card">
-    <div id="notif">💌 1 New Letter</div>
     <h1>HEYYYY HEERIKA JAIN 💖</h1>
     <p>Will you be my Valentine?</p>
     <div id="countdown"></div>
@@ -208,11 +187,8 @@ button{
   </div>
 </div>
 
-<div id="bin">🗑️</div>
-<div id="cheat">don’t cheat 😌</div>
-
 <script>
-/* BACKGROUND HEARTS */
+// HEARTS
 setInterval(()=>{
   const h=document.createElement("div");
   h.className="heart-bg";
@@ -224,7 +200,6 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),15000);
 },220);
 
-/* CURSOR */
 document.addEventListener("mousemove",e=>{
   const h=document.createElement("div");
   h.className="cursor-heart";
@@ -235,122 +210,74 @@ document.addEventListener("mousemove",e=>{
   setTimeout(()=>h.remove(),900);
 });
 
-/* COUNTDOWN */
+// COUNTDOWN
 const cd=document.getElementById("countdown");
 const V=new Date("Feb 14, 2026 00:00:00").getTime();
 setInterval(()=>{
   const d=V-Date.now();
   if(d<=0){ cd.innerHTML="❤️ It’s Today ❤️"; return; }
-  const days=Math.floor(d/86400000);
-  const hrs=Math.floor((d%86400000)/3600000);
-  const mins=Math.floor((d%3600000)/60000);
-  const secs=Math.floor((d%60000)/1000);
-  cd.innerHTML=`⏳ ${days}d ${hrs}h ${mins}m ${secs}s`;
+  cd.innerHTML=
+    Math.floor(d/86400000)+"d "+
+    Math.floor(d%86400000/3600000)+"h "+
+    Math.floor(d%3600000/60000)+"m "+
+    Math.floor(d%60000/1000)+"s";
 },1000);
 
-/* LETTER TEXT */
+// LETTER CONTENT
 function getLetter(){
-  const arr=[
-    "What kind of pie is Heerika?\nA cutie-pie.",
-    "If Heerika were WiFi, I’d never disconnect.",
-    "Heerika isn’t a crush.\nShe’s a daily requirement.",
-    "Is Heerika a typo?\nBecause perfection feels accidental.",
-    "If smiles had a face, it’d be Heerika."
+  const normal=[
+    "What kind of pie is Heerika?\nA certified cutie-pie.",
+    "Is Heerika Wi-Fi?\nBecause I feel connected instantly.",
+    "If Heerika smiled any harder,\nphysics would give up.",
+    "What’s Heerika’s superpower?\nMaking this page nervous.",
+    "Are you a keyboard?\nBecause Heerika is my type."
   ];
-  return arr[Math.floor(Math.random()*arr.length)];
+  return normal[Math.floor(Math.random()*normal.length)];
 }
 
-/* FALLING HEARTS */
-function fallHearts(){
-  for(let i=0;i<6;i++){
-    const h=document.createElement("div");
-    h.className="fall-heart";
-    h.innerText="💖";
-    h.style.left=50+Math.random()*40-20+"%";
-    h.style.top="40%";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),2000);
-  }
-}
-
-/* OPEN LETTER FLOW (FIXED) */
-function openLetter(){
-  document.getElementById("container").remove();
-
-  const wrap=document.createElement("div");
-  wrap.className="container";
-  wrap.innerHTML=`
-    <div class="envelope-wrapper">
-      <div class="envelope" id="env">
-        <div class="envelope-flap"><span>💌</span></div>
-        <div class="paper" id="paper">
-          <p>${getLetter()}</p>
-          <p style="margin-top:20px">${cd.innerHTML}</p>
-          <div class="signature">– KS</div>
-        </div>
-      </div>
-    </div>`;
-  document.body.appendChild(wrap);
+// YES
+document.getElementById("yes").onclick=()=>{
+  document.getElementById("container").innerHTML=
+  `<div class="envelope-wrapper">
+    <div class="envelope" id="env">
+      <div class="envelope-flap" id="flap"><span>💌</span></div>
+      <div class="paper" id="paper"></div>
+    </div>
+  </div>`;
 
   const env=document.getElementById("env");
+  const flap=document.getElementById("flap");
   const paper=document.getElementById("paper");
+  let open=false;
 
-  let isOpen=false;
-
-  setTimeout(()=>{
-    env.classList.add("open");
-    setTimeout(()=>{
-      paper.classList.add("open");
-      isOpen=true;
-      fallHearts();
-    },600);
-  },800);
-
-  paper.onclick=()=>{
-    isOpen=!isOpen;
-    paper.classList.toggle("open",isOpen);
-    env.classList.toggle("open",isOpen);
-    if(isOpen) fallHearts();
-  };
-}
-
-/* YES + NOTIF */
-document.getElementById("yes").onclick=openLetter;
-document.getElementById("notif").onclick=openLetter;
-
-/* RUNAWAY NO */
-const no=document.getElementById("no");
-document.addEventListener("mousemove",e=>{
-  const r=no.getBoundingClientRect();
-  const dx=e.clientX-(r.left+r.width/2);
-  const dy=e.clientY-(r.top+r.height/2);
-  if(Math.hypot(dx,dy)<120){
-    no.style.transform=`translate(${-dx}px,${-dy}px)`;
+  function openEnv(){
+    flap.style.transform="rotateX(180deg)";
+    paper.classList.add("open");
+    paper.innerHTML=
+      `<p>${getLetter()}</p>
+       <p style="margin-top:16px">${cd.innerHTML}</p>
+       <div class="signature">– KS</div>`;
+    open=true;
   }
-});
 
-/* NO → BIN */
-no.onclick=()=>{
-  const bin=document.getElementById("bin");
-  const cheat=document.getElementById("cheat");
-  bin.classList.add("show");
+  function closeEnv(){
+    paper.classList.remove("open");
+    flap.style.transform="rotateX(0deg)";
+    open=false;
+  }
 
-  const r=no.getBoundingClientRect();
-  no.style.position="fixed";
-  no.style.left=r.left+"px";
-  no.style.top=r.top+"px";
+  setTimeout(openEnv,900);
 
-  setTimeout(()=>{
-    no.style.transition="1s";
-    no.style.left="50%";
-    no.style.top="92%";
-    no.style.transform="translate(-50%,0) scale(.1)";
-  },20);
+  paper.onclick=()=> open ? closeEnv() : openEnv();
+  document.getElementById("notif").onclick=openEnv;
+};
 
-  setTimeout(()=>{
-    no.remove();
-    cheat.classList.add("show");
-  },1000);
+// NO → BIN
+document.getElementById("no").onclick=()=>{
+  const b=document.getElementById("bin");
+  b.style.display="block";
+  document.getElementById("no").style.display="none";
+  alert("don’t cheat 😤");
 };
 </script>
 

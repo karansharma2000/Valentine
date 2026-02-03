@@ -76,13 +76,13 @@ button{
 /* NOTIFICATION */
 #notif{
   position:fixed;
-  top:24px;
-  right:24px;
+  top:26px;
+  right:26px;
   background:#ff3f81;
   color:white;
-  padding:14px 22px;
-  border-radius:16px;
-  box-shadow:0 12px 30px rgba(0,0,0,.3);
+  padding:16px 24px;
+  border-radius:18px;
+  box-shadow:0 14px 32px rgba(0,0,0,.3);
   font-size:16px;
   cursor:pointer;
   animation:shake 1.2s infinite;
@@ -97,8 +97,8 @@ button{
 /* ENVELOPE */
 .envelope-wrapper{
   position:relative;
-  width:420px;
-  height:280px;
+  width:480px;
+  height:320px;
 }
 
 .envelope{
@@ -106,26 +106,29 @@ button{
   width:100%;
   height:100%;
   background:#ff9ecb;
-  border-radius:18px;
-  box-shadow:0 30px 80px rgba(0,0,0,.3);
+  border-radius:22px;
+  box-shadow:0 30px 80px rgba(0,0,0,.35);
   overflow:hidden;
 }
 
+/* FLAP */
 .envelope-flap{
   position:absolute;
   inset:0;
   background:#ff7fb8;
-  clip-path:polygon(0 0,100% 0,50% 60%);
+  clip-path:polygon(0 0,100% 0,50% 58%);
   transform-origin:50% 0%;
   transition:transform 1s ease;
-  z-index:5;
+  z-index:6;
   display:flex;
   justify-content:center;
+  align-items:flex-start;
 }
 
 .envelope-flap span{
-  margin-top:20px;
-  font-size:38px;
+  position:absolute;
+  top:18px;
+  font-size:42px;
   animation:heartbeat 1.8s infinite;
 }
 
@@ -138,34 +141,45 @@ button{
 /* PAPER */
 .paper{
   position:absolute;
-  bottom:-320px;
+  bottom:-380px;
   left:50%;
   transform:translateX(-50%);
-  width:360px;
+  width:400px;
   background:white;
-  padding:40px;
-  border-radius:20px;
-  box-shadow:0 20px 60px rgba(0,0,0,.35);
+  padding:44px;
+  border-radius:22px;
+  box-shadow:0 24px 70px rgba(0,0,0,.35);
   transition:bottom 1.2s ease;
   cursor:pointer;
-  z-index:3;
+  z-index:4;
 }
 
-.paper.open{ bottom:24px; }
+.paper.open{ bottom:28px; }
 
 .signature{
   font-family:'Great Vibes',cursive;
-  font-size:30px;
-  margin-top:24px;
+  font-size:32px;
+  margin-top:26px;
 }
 
-/* GARBAGE */
+/* BIN */
 #bin{
   position:fixed;
-  bottom:40px;
+  bottom:32px;
   right:40px;
   font-size:64px;
-  display:none;
+  opacity:0;
+  transition:opacity .4s;
+}
+
+#cheat-text{
+  position:fixed;
+  bottom:20px;
+  width:100%;
+  text-align:center;
+  font-size:18px;
+  opacity:0;
+  transition:opacity .5s;
 }
 </style>
 </head>
@@ -174,6 +188,7 @@ button{
 
 <div id="notif">💌 1 New Letter</div>
 <div id="bin">🗑️</div>
+<div id="cheat-text">don’t cheat 😤</div>
 
 <div class="container" id="container">
   <div class="card">
@@ -210,6 +225,24 @@ document.addEventListener("mousemove",e=>{
   setTimeout(()=>h.remove(),900);
 });
 
+// RUNAWAY NO
+const no=document.getElementById("no");
+document.addEventListener("mousemove",e=>{
+  const r=no.getBoundingClientRect();
+  const dx=e.clientX-(r.left+r.width/2);
+  const dy=e.clientY-(r.top+r.height/2);
+  if(Math.hypot(dx,dy)<120){
+    no.style.transform=`translate(${-dx}px,${-dy}px)`;
+  }
+});
+
+// NO CLICK → BIN
+no.onclick=()=>{
+  document.getElementById("bin").style.opacity=1;
+  document.getElementById("cheat-text").style.opacity=1;
+  no.style.display="none";
+};
+
 // COUNTDOWN
 const cd=document.getElementById("countdown");
 const V=new Date("Feb 14, 2026 00:00:00").getTime();
@@ -225,27 +258,25 @@ setInterval(()=>{
 
 // LETTER CONTENT
 function getLetter(){
-  const normal=[
+  const lines=[
     "What kind of pie is Heerika?\nA certified cutie-pie.",
-    "Is Heerika Wi-Fi?\nBecause I feel connected instantly.",
-    "If Heerika smiled any harder,\nphysics would give up.",
-    "What’s Heerika’s superpower?\nMaking this page nervous.",
+    "Is Heerika Wi-Fi?\nBecause I’m automatically connected.",
+    "If Heerika smiled harder,\ngravity would give up.",
     "Are you a keyboard?\nBecause Heerika is my type."
   ];
-  return normal[Math.floor(Math.random()*normal.length)];
+  return lines[Math.floor(Math.random()*lines.length)];
 }
 
 // YES
 document.getElementById("yes").onclick=()=>{
   document.getElementById("container").innerHTML=
   `<div class="envelope-wrapper">
-    <div class="envelope" id="env">
+    <div class="envelope">
       <div class="envelope-flap" id="flap"><span>💌</span></div>
       <div class="paper" id="paper"></div>
     </div>
   </div>`;
 
-  const env=document.getElementById("env");
   const flap=document.getElementById("flap");
   const paper=document.getElementById("paper");
   let open=false;
@@ -255,7 +286,7 @@ document.getElementById("yes").onclick=()=>{
     paper.classList.add("open");
     paper.innerHTML=
       `<p>${getLetter()}</p>
-       <p style="margin-top:16px">${cd.innerHTML}</p>
+       <p style="margin-top:18px">${cd.innerHTML}</p>
        <div class="signature">– KS</div>`;
     open=true;
   }
@@ -270,14 +301,6 @@ document.getElementById("yes").onclick=()=>{
 
   paper.onclick=()=> open ? closeEnv() : openEnv();
   document.getElementById("notif").onclick=openEnv;
-};
-
-// NO → BIN
-document.getElementById("no").onclick=()=>{
-  const b=document.getElementById("bin");
-  b.style.display="block";
-  document.getElementById("no").style.display="none";
-  alert("don’t cheat 😤");
 };
 </script>
 

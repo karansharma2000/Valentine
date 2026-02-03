@@ -80,19 +80,24 @@ button{
   justify-content:center;
 }
 
+/* ENVELOPE */
 .envelope{
-  width:340px;
-  height:220px;
+  width:360px;
+  height:240px;
+  position:relative;
   background:#ff9ecb;
   border-radius:14px;
-  position:relative;
   box-shadow:0 30px 80px rgba(0,0,0,.3);
   overflow:hidden;
+  z-index:1;
 }
 
+/* FLAP */
 .flap{
   position:absolute;
-  inset:0;
+  top:0;
+  width:100%;
+  height:100%;
   background:#ff7fb8;
   clip-path:polygon(0 0,100% 0,50% 55%);
   transform-origin:top;
@@ -106,20 +111,15 @@ button{
 /* LETTER */
 .letter{
   position:absolute;
-  bottom:-260px;
+  bottom:-320px;
   left:50%;
   transform:translateX(-50%);
-  width:300px;
-  height:380px;
-  padding:26px;
-  background:
-    repeating-linear-gradient(
-      #fff,
-      #fff 24px,
-      #f3f3f3 25px
-    );
-  border-radius:10px;
-  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  width:320px;
+  height:400px;
+  padding:28px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
   transition:bottom 1.2s ease;
   cursor:pointer;
   z-index:2;
@@ -130,7 +130,7 @@ button{
 }
 
 .signature{
-  margin-top:24px;
+  margin-top:26px;
   font-family:cursive;
   font-size:22px;
   text-align:right;
@@ -253,6 +253,11 @@ document.getElementById("yes").onclick=()=>{
   document.getElementById("envelopeScene").style.display="flex";
   document.getElementById("letterText").innerText=
     normal[Math.floor(Math.random()*normal.length)];
+
+  // auto open once
+  setTimeout(()=>{
+    document.getElementById("letter").classList.add("open");
+  },1400);
 };
 
 // LETTER TOGGLE
